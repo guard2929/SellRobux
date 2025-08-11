@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <style>
+        .all {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+        }
+
+        .login-container {
+            background: rgba(26, 27, 40, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            margin: 150px auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid #2a2e3d;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .login-header img {
+            width: 100px;
+            filter: brightness(0) invert(1);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #2a2e3d;
+            background-color: #181b28;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5122b1;
+            box-shadow: 0 0 0 2px rgba(81, 22, 177, 0.3);
+        }
+
+        .btn-login {
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #402235;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #4a2a3f;
+            transform: translateY(-2px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #a0a0c0;
+        }
+
+        .register-link a {
+            color: #8a63d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff5555;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 85, 85, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ff5555;
+        }
+
+        .content {
+            margin: 0px auto !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+    </style>
+</head>
+<body style="background-image: url('{% static 'media/3d-fantasy-scene.png' %}');">
+<div class="all">
+    <div class="content">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="{% static 'media/logo-white.png' %}" alt="Логотип">
+                <h1>Вход в систему</h1>
+            </div>
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Введите ваш email"
+                           required>
+                    {% if error and 'email' in error %}
+                        <div class="error-message">{{ error.email }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" class="form-control"
+                           placeholder="Введите ваш пароль" required>
+                    {% if error and 'password' in error %}
+                        <div class="error-message">{{ error.password }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn-login">Войти</button>
+
+                <div class="register-link">
+                    Нет аккаунта? <a href="{% url 'core:register' %}">Зарегистрироваться</a>
+                </div>
+
+                {% if error %}
+                    <div class="error-message">{{ error }}</div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

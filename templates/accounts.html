@@ -1,0 +1,262 @@
+    {% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление аккаунта Roblox</title>
+    <style>
+
+select:not(:-internal-list-box):not([multiple]) {
+    /* Core styling */
+    appearance: none; /* Remove default browser styling */
+    background-color: #181b28; /* Match the input field background */
+    color: #e0e0e0; /* Light text color for readability */
+    border: 1px solid #2a2e3d; /* Border color matching form elements */
+    border-radius: 8px; /* Consistent rounded corners */
+    padding: 12px 30px 12px 15px; /* Padding for text, with extra space for arrow */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Match body font */
+    font-size: 16px; /* Consistent font size */
+    font-weight: 500; /* Medium weight for readability */
+    width: 90%; /* Match input field width */
+    min-height: 44px; /* Ensure consistent height */
+    cursor: pointer; /* Indicate interactivity */
+    transition: all 0.3s ease; /* Smooth transitions for hover/focus */
+
+    /* Custom dropdown arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23e0e0e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position arrow on the right */
+
+    /* Flexbox for alignment */
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Focus state */
+select:not(:-internal-list-box):not([multiple]):focus {
+    outline: none;
+    border-color: #5122b1; /* Purple border to match input focus */
+    box-shadow: 0 0 0 2px rgba(81, 22, 177, 0.3); /* Subtle glow effect */
+}
+
+/* Hover state */
+select:not(:-internal-list-box):not([multiple]):hover {
+    border-color: #3a3e4d; /* Slightly lighter border on hover */
+    background-color: #1f2232; /* Subtle background change */
+}
+
+/* Disabled state */
+select:not(:-internal-list-box):not([multiple]):disabled {
+    background-color: #2a2e3d; /* Dimmed background */
+    color: #666; /* Muted text */
+    cursor: not-allowed;
+    opacity: 0.6; /* Reduced opacity for disabled state */
+}
+
+/* Ensure options inherit the same font and color */
+select:not(:-internal-list-box):not([multiple]) option {
+    background-color: #181b28; /* Dark background for dropdown options */
+    color: #e0e0e0; /* Light text for options */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px; /* Comfortable padding for options */
+}
+
+        .account-form-group {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #3a3e4d;
+            border-radius: 8px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('{% static 'media/3d-fantasy-scene.png' %}');
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #e0e0e0;
+        }
+
+        .all {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(26, 27, 40, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid #2a2e3d;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #e0e0e0;
+        }
+
+        .messages, .form-errors {
+            color: #ff5555;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(255, 85, 85, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ff5555;
+            width: 90%;
+            margin: 0 auto 20px;
+        }
+
+        .instructions {
+            background: rgba(40, 42, 54, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #5122b1;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+            width: 90%;
+            text-align: left;
+        }
+
+        .cookie-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #2a2e3d;
+            background-color: #181b28;
+            color: #e0e0e0;
+            font-size: 16px;
+            width: 90%;
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .cookie-input:focus {
+            outline: none;
+            border-color: #5122b1;
+            box-shadow: 0 0 0 2px rgba(81, 22, 177, 0.3);
+        }
+
+        .btn-primary {
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #402235;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 90%;
+            display: block;
+            margin: 25px auto 15px;
+        }
+
+        .btn-primary:hover {
+            background-color: #4a2a3f;
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #2a2e3d;
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .back-button:hover {
+            background-color: #3a3e4d;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: #ff5555;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 85, 85, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ff5555;
+            width: 90%;
+            margin: 15px auto 0;
+        }
+    </style>
+</head>
+<body>
+<div class="all">
+    <div class="container">
+        <h2>Добавить аккаунт Roblox</h2>
+
+        <div class="instructions">
+            <h3>Как получить .ROBLOSECURITY:</h3>
+            <ol>
+                <li>Зайдите в браузер, где авторизованы в Roblox</li>
+                <li>Откройте инструменты разработчика (F12)</li>
+                <li>Перейдите во вкладку "Application" (Chrome) или "Storage" (Firefox)</li>
+                <li>В разделе Cookies найдите ".ROBLOSECURITY"</li>
+                <li>Скопируйте его значение и вставьте в поле ниже</li>
+            </ol>
+            <p><strong>Внимание:</strong> Никому не передавайте это значение!</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Roblox Cookie:</label>
+                {{ form.roblox_cookie }}
+                {% if form.roblox_cookie.errors %}
+                    <div class="error">{{ form.roblox_cookie.errors }}</div>
+                {% endif %}
+
+            </div>
+            <label>Курс продажи:</label>
+            {{ form.rate }}
+            {% if form.rate.errors %}
+                <div class="error">{{ form.rate.errors }}</div>
+            {% endif %}
+            <button type="submit" class="btn-primary">Добавить аккаунт</button>
+        </form>
+
+        <a href="{% url 'core:home' %}" class="back-button">Вернуться на главную</a>
+    </div>
+</div>
+</body>
+</html>

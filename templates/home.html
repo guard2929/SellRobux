@@ -1,0 +1,283 @@
+{% load static %}
+{% load multiply %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фиксированное меню сверху</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+</head>
+<body style="background-image: url('{% static 'media/3d-fantasy-scene.png' %}');">
+<div class="all">
+    <div class="top-menu">
+        <img src="{% static 'media/logo-white.png' %}" class="logo-white" alt="Логотип">
+        <div class="menu-content">
+                <span class="menu-item active" data-target="portfolio">
+                    <img src="{% static 'media/person-icon.png' %}" alt="Портфолио">
+                    <span data-en="Portfolio" data-ru="Портфолио" class="lang">Портфолио</span>
+                </span>
+            <span class="menu-item" data-target="accounts">
+                    <img src="{% static 'media/accounts.png' %}" alt="Аккаунты">
+                    <span data-en="Accounts" data-ru="Аккаунты" class="lang">Аккаунты</span>
+                </span>
+            <span class="menu-item" data-target="wallet">
+                    <img src="{% static 'media/wallet.png' %}" alt="Кошелек">
+                    <span data-en="Wallet" data-ru="Кошелек" class="lang">Кошелек</span>
+                </span>
+            <span class="menu-item" data-target="sold">
+                    <img src="{% static 'media/sold.png' %}" alt="Продано">
+                    <span data-en="Sold" data-ru="Продано" class="lang">Продано</span>
+                </span>
+        </div>
+        <div class="right">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <form action="{% url 'core:logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">
+                    <img src="{% static 'media/logout.png' %}" alt="Выход">
+                </button>
+            </form>
+
+        </div>
+    </div>
+    <div class="mobile-menu">
+        <div class="close-button">
+            <span></span>
+            <span></span>
+        </div>
+        <span class="menu-item active" data-target="portfolio">
+                <img src="{% static 'media/person-icon.png' %}" alt="Портфолио">
+                <span data-en="Portfolio" data-ru="Портфолио" class="lang">Портфолио</span>
+            </span>
+        <span class="menu-item" data-target="accounts">
+                <img src="{% static 'media/accounts.png' %}" alt="Аккаунты">
+                <span data-en="Accounts" data-ru="Аккаунты" class="lang">Аккаунты</span>
+            </span>
+        <span class="menu-item" data-target="wallet">
+                <img src="{% static 'media/wallet.png' %}" alt="Кошелек">
+                <span data-en="Wallet" data-ru="Кошелек" class="lang">Кошелек</span>
+            </span>
+        <span class="menu-item" data-target="sold">
+                <img src="{% static 'media/sold.png' %}" alt="Продано">
+                <span data-en="Sold" data-ru="Продано" class="lang">Продано</span>
+            </span>
+    </div>
+    <div class="content">
+        <div id="portfolio" class="section active">
+                <span class="seller-h1">
+                    <h1>Аккаунт продавца</h1>
+                    <p>#1233</p>
+                </span>
+            <div class="seller-info">
+                {% if roblox_user %}
+                    <img src="{{ roblox_user.avatar_url }}" alt="Аватар">
+                    <div class="column">
+                        <h3>{{ roblox_user.username }}</h3>
+                        <p>Продавец</p>
+                    </div>
+                {% else %}
+                    <img src="{% static 'media/money.png' %}" alt="">
+                    <div class="column">
+                        <h3>{% if accounts %}Аккаунты подключены{% else %}Не подключено{% endif %}</h3>
+                        <p>{% if accounts %}Информация обновляется{% else %}Добавьте аккаунт Roblox{% endif %}</p>
+                    </div>
+                {% endif %}
+            </div>
+            <span class="total-statistic">
+                    <img src="{% static 'media/statistic.png' %}" alt="">
+                    <h2>Общая статистика</h2>
+                </span>
+            <div class="statistic">
+                <div class="total-orders">
+                    <p>Успешных продаж:</p>
+                    <h1>{{ accounts.count }}</h1>
+                </div>
+                <div class="total-accounts">
+                    <p>Аккаунтов:</p>
+                    <h1>{{ total_accounts }}</h1>
+                </div>
+                <div class="total-robux-sold">
+                    <p>Робуксов продано:</p>
+                    <span>
+                        <img src="{% static 'media/robux-icon.png' %}" alt="">
+                        <h1>{{ total_sold }}</h1>
+                    </span>
+                </div>
+                <div class="total-earned">
+                    <p>Заработанно:</p>
+                    <h1>{{ total_earned|floatformat:2 }} $</h1>
+                </div>
+            </div>
+
+        </div>
+        <div id="accounts" class="section">
+            <h1>Аккаунты</h1>
+            <a href="{% url 'core:accounts' %}" class="add-account-a">
+                <span>Добавить аккаунт</span>
+                <span class="add-account-rotate">+</span>
+            </a>
+
+            <span class="total-statistic">
+                    <img src="{% static 'media/my-accounts.png' %}" alt="">
+                    <h2>Мои аккаунты:</h2>
+                </span>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя пользователя</th>
+                        <th>Баланс</th>
+                    </tr>
+                    {% for account in accounts %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ account.username }}</td>
+                            <td>{{ account.robux_balance }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Нет добавленных аккаунтов</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div id="wallet" class="section">
+            <h1>Вывести средства</h1>
+            <div class="available-balance">
+                <p>Доступный баланс</p>
+                <h1>${{ available_dollars|floatformat:2 }}</h1>
+            </div>
+            <p class="grey-p-un">Способы вывода:</p>
+            <form method="post" action="{% url 'core:withdraw_wallet' %}">
+                {% csrf_token %}
+                <div class="colunm">
+                        {% if withdraw_errors %}
+                            <div class="error-message">
+                                {% for error in withdraw_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    <div class="width-container">
+                        <div class="method" data-method="trc20">
+                            <input type="radio" id="trc20" name="withdraw" value="trc20" checked>
+                            <label for="trc20">
+                                <span class="icon"><img src="{% static 'media/usdt-rtc20.png' %}" alt=""></span>
+                                <span>USDT TRC-20</span>
+                            </label>
+                        </div>
+                        <div class="method" data-method="bep20">
+                            <input type="radio" id="bep20" name="withdraw" value="bep20">
+                            <label for="bep20">
+                                <span class="icon"><img src="{% static 'media/usdt-bep20.png' %}" alt=""></span>
+                                <span>USDT BEP-20</span>
+                            </label>
+                        </div>
+                        <div class="method" data-method="ltc">
+                            <input type="radio" id="ltc" name="withdraw" value="ltc">
+                            <label for="ltc">
+                                <span class="icon-th"><img src="{% static 'media/ltc.png' %}" alt="Litecoin"></span>
+                                <span>LTC</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <p class="strong-ip">Не забудьте, что перед тем как совершить вывод, вы должны проверить, выключена ли у вас 2FA на аккаунте Roblox.</p>
+                    <select name="gamepass_id" required id="account-selector">
+                        <option value="">-- Выберите ваш аккаунт --</option>
+                        {% for account in accounts %}
+                            <option value="{{ account.id }}"
+                                    data-balance="{{ account.available_dollars|floatformat:2 }}"
+                                    data-rate="{{ account.rate }}">
+                                {{ account.username }} (${{ account.available_dollars|floatformat:2 }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <p class="grey-p-input">Адрес вывода:</p>
+                    <div class="sum-info">
+                        <img src="{% static 'media/credit-card.png' %}" alt="Dollar icon">
+                        <input type="text" name="wallet_address" class="summ" placeholder="Введите адресс кошелька"
+                               required>
+                    </div>
+                    <p class="grey-p-input-t">Сумма к выводу ($):</p>
+                    <div class="sum-info">
+                        <img src="{% static 'media/dollar.png' %}" alt="Dollar icon">
+                        <input type="number" name="amount" class="summ" placeholder="Введите сумму" step="0.01"
+                               min="0.01" max="100000" required>
+                    </div>
+                </div>
+                <button class="withdraw-money-btn" type="submit">
+                    <span>
+                        <img src="{% static 'media/withdraw.png' %}" alt="Withdraw icon">
+                        Вывести
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <div id="sold" class="section">
+            <h1>Запросы на вывод</h1>
+            <p>История ваших запросов на вывод средств.</p>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Аккаунт</th>
+                        <th>Robux</th>
+                        <th>Сумма ($)</th>
+                        <th>Криптовалюта</th>
+                        <th>Кошелек</th>
+                        <th>Статус</th>
+                        <th>Дата</th>
+                    </tr>
+                    {% for withdrawal in sold %}
+                        <tr>
+                            <td>{{ withdrawal.id }}</td>
+                            <td>{{ withdrawal.username }}</td>
+                            <td>{{ withdrawal.robux_amount }}</td>
+                            <td>{{ withdrawal.dollar_amount|floatformat:2 }}</td>
+                            <td>{{ withdrawal.get_cryptocurrency_display }}</td>
+                            <td>{{ withdrawal.wallet_address|truncatechars:15 }}</td>
+                            <td>{{ withdrawal.get_status_display }}</td>
+                            <td>{{ withdrawal.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8">Нет запросов на вывод</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'script.js' %}">
+    document.addEventListener('DOMContentLoaded', function () {
+        const accountSelector = document.getElementById('account-selector');
+        const balanceDisplay = document.querySelector('.available-balance h1');
+        const amountInput = document.querySelector('input[name="amount"]');
+
+        if (accountSelector && amountInput) {
+            accountSelector.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption.value) {
+                    const balance = parseFloat(selectedOption.dataset.balance).toFixed(2);
+                    balanceDisplay.textContent = `$${balance}`;
+                    // Обновляем максимальное значение для поля ввода
+                    amountInput.max = balance;
+                } else {
+                    balanceDisplay.textContent = '$0.00';
+                    amountInput.max = 0;
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

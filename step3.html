@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка Game Pass</title>
+    <style>
+        /* СТИЛИ ИЗ ПЕРВОГО ФАЙЛА */
+        :root {
+            --primary-color: #5865F2;
+            --secondary-color: #EB459E;
+            --text-color: #2E3338;
+            --light-gray: #F2F4F4;
+            --white: #FFFFFF;
+            --error-color: #F04747;
+            --success-color: #2DCE89;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --button-gradient: linear-gradient(90deg, #a1c4fd, #f8c3d0, #ffdd9a);
+            --input-border: 1px solid #E0E2E5;
+        }
+
+        * {
+            font-family: 'Inter', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .center-content {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .content-block {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 10px;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: var(--input-border);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            background-color: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.1);
+        }
+
+        .activate-btn {
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .activate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(161, 196, 253, 0.3);
+        }
+
+        .activate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
+        pre {
+            background-color: var(--light-gray);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin: 16px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .gamepass-list {
+            margin: 16px 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .gamepass-list li {
+            padding: 12px 16px;
+            border: var(--input-border);
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            background-color: var(--light-gray);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .button-group .activate-btn {
+            flex: 1;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="center-content">
+    <div class="content-block active">
+        <h1>Настройка Game Pass</h1>
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+            <a href="{% url 'core:buy_step2' %}" class="activate-btn">Вернуться</a>
+        {% else %}
+            <!-- Вывод ошибок проверки -->
+            {% if check_error %}
+                <p class="error-message">{{ check_error }}</p>
+            {% endif %}
+
+            <p>Выберите существующий Game Pass или создайте новый.</p>
+            <p>Вы выбрали: <span class="highlight">{{ robux }} Robux</span> за <span
+                    class="highlight">{{ price }}$</span></p>
+            <p>Плейс: {{ place_name }} (ID: {{ place_id }})</p>
+            <p>Рекомендуемая цена Game Pass: <span class="highlight">{{ gamepass_price }} Robux</span></p>
+
+            <pre>{{ instruction }}</pre>
+
+            <form method="POST" action="{% url 'core:buy_confirm' %}">
+                {% csrf_token %}
+                <input type="hidden" name="robux" value="{{ robux }}">
+                <input type="hidden" name="price" value="{{ price }}">
+                <input type="hidden" name="place_id" value="{{ place_id }}">
+                <input type="hidden" name="place_name" value="{{ place_name }}">
+                <input type="hidden" name="purchase_id" value="{{ purchase_id }}">
+                <input type="hidden" name="promo_code" value="{{ promo_code }}">
+
+                <label for="place_link">Ссылка на плейс (с ID):</label>
+                <!-- Сохраняем введенное значение -->
+                <input type="text" name="place_link" value="{% if saved_place_link %}{{ saved_place_link }}{% else %}{{ place_link }}{% endif %}"
+                       placeholder="https://www.roblox.com/games/...">
+
+                <label for="gamepass_id">Выберите Game Pass:</label>
+                <select name="gamepass_id" required>
+                    <option value="">-- Выберите Game Pass --</option>
+                    {% for gp in gamepasses %}
+                        <!-- Сохраняем выбранное значение -->
+                        <option value="{{ gp.id }}"
+                            {% if saved_gamepass_id == gp.id|stringformat:"s" %}selected{% endif %}>
+                            {{ gp.name }} ({{ gp.price }} R$)
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <div class="button-group">
+                    <button type="submit" name="action" value="check" class="activate-btn">Проверить</button>
+                    {% if universe_id and gamepasses %}
+                        <button type="submit" name="action" value="pay" class="activate-btn">Оплатить</button>
+                    {% endif %}
+                </div>
+            </form>
+            <a href="{% url 'core:buy_step2' %}" class="activate-btn"
+               style="background: var(--light-gray); color: var(--text-color);">Вернуться</a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

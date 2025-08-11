@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фиксированное меню сверху</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="all">
+        <div class="top-menu">
+            <img src="img/logo-white.png" class="logo-white" alt="Логотип">
+            <div class="menu-content">
+                <span class="menu-item active" data-target="portfolio">
+                    <img src="img/person-icon.png" alt="Портфолио"><span data-en="Portfolio" data-ru="Портфолио" class="lang">Портфолио</span>
+                </span>
+                <span class="menu-item" data-target="accounts">
+                    <img src="img/accounts.png" alt="Аккаунты"><span data-en="Accounts" data-ru="Аккаунты" class="lang">Аккаунты</span>
+                </span>
+                <span class="menu-item" data-target="wallet">
+                    <img src="img/wallet.png" alt="Кошелек"><span data-en="Wallet" data-ru="Кошелек" class="lang">Кошелек</span>
+                </span>
+                <span class="menu-item" data-target="proxies">
+                    <img src="img/proxi.png" alt="Прокси"><span data-en="Proxies" data-ru="Прокси" class="lang">Прокси</span>
+                </span>
+                <span class="menu-item" data-target="sold">
+                    <img src="img/sold.png" alt="Продано"><span data-en="Sold" data-ru="Продано" class="lang">Продано</span>
+                </span>
+            </div>
+            <div class="right">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <a href="#" class="logout-button">
+                    <img src="img/logout.png" alt="Выход">
+                </a>
+            </div>
+        </div>
+        <div class="mobile-menu">
+            <div class="close-button">
+                <span></span>
+                <span></span>
+            </div>
+            <span class="menu-item active" data-target="portfolio">
+                <img src="img/person-icon.png" alt="Портфолио"><span data-en="Portfolio" data-ru="Портфолио" class="lang">Портфолио</span>
+            </span>
+            <span class="menu-item" data-target="accounts">
+                <img src="img/accounts.png" alt="Аккаунты"><span data-en="Accounts" data-ru="Аккаунты" class="lang">Аккаунты</span>
+            </span>
+            <span class="menu-item" data-target="wallet">
+                <img src="img/wallet.png" alt="Кошелек"><span data-en="Wallet" data-ru="Кошелек" class="lang">Кошелек</span>
+            </span>
+            <span class="menu-item" data-target="proxies">
+                <img src="img/proxi.png" alt="Прокси"><span data-en="Proxies" data-ru="Прокси" class="lang">Прокси</span>
+            </span>
+            <span class="menu-item" data-target="sold">
+                <img src="img/sold.png" alt="Продано"><span data-en="Sold" data-ru="Продано" class="lang">Продано</span>
+            </span>
+        </div>
+        <div class="content">
+            <div id="portfolio" class="section active">
+                <span class="seller-h1">
+                    <h1>Аккаунт продавца</h1>
+                    <p>#1233</p>
+                </span>
+                <div class="seller-info">
+                    <img src="img/money.png" alt="">
+                    <div class="column">
+                        <h3>VladTurba</h3>
+                        <p>Продавец</p>
+                    </div>
+                </div>
+                <span class="total-statistic">
+                    <img src="img/statistic.png" alt="">
+                    <h2>Общая статистика</h2>
+                </span>
+                <div class="statistic">
+                    <div class="total-orders">
+                        <p>Успешных продаж:</p>
+                        <h1>0</h1>
+                    </div>
+                    <div class="total-accounts">
+                        <p>Аккаунтов:</p>
+                        <h1>0</h1>
+                    </div>
+                    <div class="total-robux-sold">
+                        <p>Робуксов продано:</p>
+                        <span><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                    <div class="total-earned">
+                        <p>Заработанно:</p>
+                        <h1>0 $</h1>
+                    </div>
+                </div>
+                <span class="total-statistic">
+                    <img src="img/time-icon.png" alt="">
+                    <h2>Сегодняшняя статистика</h2>
+                </span>
+                <div class="statistic">
+                    <div class="total-orders">
+                        <p>Успешных продаж:</p>
+                        <h1>0</h1>
+                    </div>
+                    <div class="total-accounts">
+                        <p>Аккаунтов:</p>
+                        <h1>0</h1>
+                    </div>
+                    <div class="total-robux-sold">
+                        <p>Робуксов продано:</p>
+                        <span><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                    <div class="total-earned">
+                        <p>Заработанно:</p>
+                        <h1>0 $</h1>
+                    </div>
+                </div>
+            </div>
+            <div id="accounts" class="section">
+                <h1>Аккаунты</h1>
+                <a href="#" class="add-account-a">
+                    <span>Добавить аккаунт</span>
+                    <span class="add-account-rotate">+</span>
+                </a>
+                <span class="total-statistic">
+                    <img src="img/panel-inf.png" alt="">
+                    <h2>Информация о панели</h2>
+                </span>
+                <div class="statistic">
+                    <div class="total-robux-sold">
+                        <p>Общие предпродажи:</p>
+                        <span style="margin-top: 20px;"><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                    <div class="total-robux-sold">
+                        <p>Минимальная предпродажа:</p>
+                        <span><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                    <div class="total-robux-sold">
+                        <p>Ожидающих операций:</p>
+                        <span style="margin-top: 25px;"><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                    <div class="total-robux-sold">
+                        <p>Максимальный объем предпродажи:</p>
+                        <span><img src="img/robux-icon.png" alt=""><h1>0</h1></span>
+                    </div>
+                </div>
+                <span class="total-statistic">
+                    <img src="img/my-accounts.png" alt="">
+                    <h2>Мои аккаунты:</h2>
+                </span>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя пользователя</th>
+                        <th>Баланс</th>
+                        <th>Продано</th>
+                        <th>Ставка</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>user1</td>
+                        <td>100.50</td>
+                        <td>25</td>
+                        <td>2.5</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>user2</td>
+                        <td>200.75</td>
+                        <td>15</td>
+                        <td>3.0</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>user3</td>
+                        <td>150.00</td>
+                        <td>10</td>
+                        <td>2.0</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="wallet" class="section">
+                <h1>Вывести средства</h1>
+                <div class="available-balance">
+                    <p>Доступный баланс</p>
+                    <h1>$ 0.00</h1>
+                </div>
+                <p class="grey-p">Способы вывода:</p>
+                <form action="POST">
+                    <div class="colunm">
+                        <div class="width-container">
+                            <div class="method" data-method="trc20">
+                                <input type="radio" id="trc20" name="withdraw" value="trc20" checked>
+                                <label for="trc20">
+                                    <span class="icon"><img src="{% static 'media/usdt-rtc20.png' %}" alt="USDT-TRC20"></span>
+                                    <span>USDT TRC-20</span>
+                                </label>
+                            </div>
+                            <div class="method" data-method="bep20">
+                                <input type="radio" id="bep20" name="withdraw" value="bep20">
+                                <label for="bep20">
+                                    <span class="icon"><img src="{% static 'media/usdt-bep20.png' %}" alt="USDT-BEP20"></span>
+                                    <span>USDT BEP-20</span>
+                                </label>
+                            </div>
+                            <div class="method" data-method="ltc">
+                                <input type="radio" id="ltc" name="withdraw" value="ltc">
+                                <label for="ltc">
+                                    <span class="icon-th"><img src="{% static 'media/ltc.png' %}" alt="Litecoin"></span>
+                                    <span>LTC</span>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="grey-p-input">Адрес вывода:</p>
+                        <div class="sum-info">
+                            <img src="img/credit-card.png" alt="Dollar icon">
+                            <input type="number" class="summ" placeholder="Введите сумму">
+                        </div>
+                        <p class="grey-p-input-t">Сумма к выводу:</p>
+                        <div class="sum-info">
+                            <img src="img/dollar.png" alt="Dollar icon">
+                            <input type="number" class="summ" placeholder="Введите сумму">
+                        </div>
+                    </div>
+                    <button class="withdraw-money-btn" type="submit">
+                        <span>
+                            <img src="img/withdraw.png" alt="Withdraw icon">
+                            Вывести
+                        </span>
+                    </button>
+                </form>
+            </div>
+            <div id="proxies" class="section">
+                <h1>Прокси</h1>
+                <p>Участвуйте в розыгрыше и выиграйте робуксы!</p>
+            </div>
+            <div id="sold" class="section">
+                <h1>Продано</h1>
+                <p>Посмотрите проданные товары.</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

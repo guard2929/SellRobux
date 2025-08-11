@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <style>
+        .all {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .registration-container {
+            background: rgba(26, 27, 40, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid #2a2e3d;
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .registration-header img {
+            width: 100px;
+            filter: brightness(0) invert(1);
+        }
+
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+            width: 90%;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #2a2e3d;
+            background-color: #181b28;
+            color: #e0e0e0;
+            font-size: 16px;
+            width: 90%;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5122b1;
+            box-shadow: 0 0 0 2px rgba(81, 22, 177, 0.3);
+        }
+
+        .btn-register {
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #402235;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            width: 90%;
+        }
+
+        .btn-register:hover {
+            background-color: #4a2a3f;
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #a0a0c0;
+            width: 100%;
+        }
+
+        .login-link a {
+            color: #8a63d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff5555;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 85, 85, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ff5555;
+            width: 90%;
+            margin: 15px auto 0;
+        }
+    </style>
+</head>
+<body style="background-image: url('{% static 'media/3d-fantasy-scene.png' %}');">
+<div class="all">
+    <div class="registration-container">
+        <div class="registration-header">
+            <img src="{% static 'media/logo-white.png' %}" alt="Логотип">
+            <h1>Регистрация</h1>
+        </div>
+
+        <form method="post" class="registration-form">
+            {% csrf_token %}
+
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Введите ваш email"
+                       required>
+                {% if form.errors.email %}
+                    <div class="error">{{ form.errors.email }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Введите пароль"
+                       required>
+                {% if form.errors.password %}
+                    <div class="error">{{ form.errors.password }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Подтвердите пароль</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                       placeholder="Повторите пароль" required>
+                {% if form.errors.confirm_password %}
+                    <div class="error">{{ form.errors.confirm_password }}</div>
+                {% endif %}
+            </div>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <button type="submit" class="btn-register">Зарегистрироваться</button>
+            </div>
+
+            <div class="login-link">
+                Уже есть аккаунт? <a href="{% url 'core:login' %}">Войти</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
