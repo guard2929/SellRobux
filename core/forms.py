@@ -178,22 +178,31 @@ FIAT_CHOICES = [
 class WithdrawForm(forms.Form):
     account = forms.ModelChoiceField(
         queryset=RobloxAccount.objects.none(),
-        label="Выберите аккаунт",
+        label="Выберите ваш аккаунт",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-    fiat_currency = forms.ChoiceField(choices=FIAT_CHOICES, initial='USD', label="Валюта")
     amount = forms.DecimalField(
         max_digits=18, decimal_places=2,
         validators=[MinValueValidator(Decimal('0.01'))],
-        label="Сумма к выводу (в выбранной валюте)",
-        widget=forms.NumberInput(attrs={'min': '0.01', 'step': '0.01', 'placeholder': 'Например 10.00'})
+        label="Сумма к выводу ($)",
+        widget=forms.NumberInput(attrs={'min': '0.01', 'step': '0.01', 'placeholder': 'Например 10.00', 'class': 'form-control'})
     )
-    wallet_address = forms.CharField(max_length=255, label="Адрес кошелька",
-                                     widget=forms.TextInput(attrs={'placeholder': 'Введите адрес кошелька'}))
+    wallet_address = forms.CharField(
+        max_length=255,
+        label="Адрес вывода",
+        widget=forms.TextInput(attrs={'placeholder': 'Введите адрес кошелька', 'class': 'form-control'})
+    )
+    withdraw_method = forms.ChoiceField(
+        choices=[
+            ('trc20', 'USDT TRC-20'),
+            ('bep20', 'USDT BEP-20'),
+            ('ltc', 'LTC')
+        ],
+        label="Способы вывода",
+        widget=forms.RadioSelect
+    )
 
-    cryptocurrency = forms.ChoiceField(choices=CRYPTO_CHOICES, label="Криптовалюта")
-
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = user
-        self.fields['account'].queryset = RobloxAccount.objects.filter(user=user)
+        if user:
+            self.fields['account'].queryset = RobloxAccount.objects.filter(user=user)

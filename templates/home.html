@@ -95,7 +95,7 @@
             <div class="statistic">
                 <div class="total-orders">
                     <p>Успешных продаж:</p>
-                    <h1>{{ accounts.count }}</h1>
+                    <h1>{{ total_sales_count }}</h1>
                 </div>
                 <div class="total-accounts">
                     <p>Аккаунтов:</p>
@@ -157,13 +157,13 @@
             <form method="post" action="{% url 'core:withdraw_wallet' %}">
                 {% csrf_token %}
                 <div class="colunm">
-                        {% if withdraw_errors %}
-                            <div class="error-message">
-                                {% for error in withdraw_errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                    {% if withdraw_errors %}
+                        <div class="error-message">
+                            {% for error in withdraw_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <div class="width-container">
                         <div class="method" data-method="trc20">
                             <input type="radio" id="trc20" name="withdraw" value="trc20" checked>
@@ -188,7 +188,8 @@
                         </div>
                     </div>
 
-                    <p class="strong-ip">Не забудьте, что перед тем как совершить вывод, вы должны проверить, выключена ли у вас 2FA на аккаунте Roblox.</p>
+                    <p class="strong-ip">Не забудьте, что перед тем как совершить вывод, вы должны проверить, выключена
+                        ли у вас 2FA на аккаунте Roblox.</p>
                     <select name="gamepass_id" required id="account-selector">
                         <option value="">-- Выберите ваш аккаунт --</option>
                         {% for account in accounts %}

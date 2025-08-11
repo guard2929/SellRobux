@@ -19,17 +19,6 @@ import logging
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
 from django.db.models import Count, Sum
-from django.db.models import F, Sum, Count, DecimalField, ExpressionWrapper
-from decimal import Decimal
-from decimal import Decimal
-from django.db.models import Sum, Count
-from django.utils import timezone
-from django.views.decorators.cache import cache_page
-from django.contrib.auth.decorators import login_required
-from decimal import Decimal
-from django.db.models import Sum, Count
-from django.views.decorators.cache import cache_page
-from django.contrib.auth.decorators import login_required
 
 try:
     import socks  # PySocks
@@ -127,66 +116,89 @@ def get_roblox_user_info(cookie, proxy=None):
 def home(request):
     user = request.user
     accounts = RobloxAccount.objects.filter(user=user)
-    total_accounts = accounts.count()
 
-    withdraw_errors = []
+    # Обновляем баланс для каждого аккаунта
     for account in accounts:
-        try:
-            update_account_balance(account)
-        except Exception as e:
-            withdraw_errors.append(f"Ошибка обновления баланса аккаунта {account.username}: {e}")
+        update_account_balance(account)
 
+    # Для секции кошелька
     selected_account_id = request.GET.get('account_id')
     selected_account = None
-    available_dollars = Decimal('0.00')
+    available_dollars = 0.00  # Инициализируем переменную
+
     if selected_account_id:
         try:
-            selected_account = accounts.get(id=selected_account_id)
-            available_dollars = selected_account.available_dollars()
+            selected_account = RobloxAccount.objects.get(id=selected_account_id, user=request.user)
+            available_dollars = selected_account.available_dollars()  # Рассчитываем доступные доллары
         except RobloxAccount.DoesNotExist:
-            withdraw_errors.append("Выбранный аккаунт не найден.")
-
+            pass
+    # Используем первый аккаунт для отображения информации
     main_account = accounts.first()
     roblox_user = None
+
     if main_account and main_account.get_cookie():
         try:
+            # передаём сохранённый прокси аккаунта (если есть)
             roblox_user = get_roblox_user_info(main_account.get_cookie(), proxy=main_account.proxy)
         except Exception as e:
-            withdraw_errors.append(f"Ошибка получения информации о пользователе Roblox: {e}")
+            print(f"Ошибка получения информации о пользователе Roblox: {e}")
+    # Вычисляем статистические показатели
+    # Вычисляем статистические показатели
+    total_accounts = accounts.count()
+    total_sold = sum(acc.robux_sold for acc in accounts)
 
-    # --- Статистика только по одобренным выводам ---
-    approved_withdrawals = WithdrawalRequest.objects.filter(user=user, status='approved')
-    stats = approved_withdrawals.aggregate(
-        total_sold=Sum('robux_amount'),
-        total_earned=Sum('dollar_amount')
+    from decimal import Decimal
+    total_earned = sum((Decimal(str(acc.robux_sold)) * Decimal(str(acc.rate))) for acc in accounts)
+    try:
+        total_earned = total_earned.quantize(Decimal('0.01'))
+    except Exception:
+        total_earned = Decimal(total_earned)
+
+    total_sales_count = SaleTransaction.objects.filter(account__user=user).count()
+
+    # Получаем сегодняшние транзакции
+    today_transactions = SaleTransaction.objects.filter(
+        account__user=user,
+        created_at__date=timezone.now().date()
     )
 
-    total_sold = stats['total_sold'] or 0
-    total_earned = stats['total_earned'] or Decimal('0.00')
+    # Вычисляем показатели за сегодня
+    today_sold = sum(t.amount for t in today_transactions)
+    today_earned = sum((Decimal(str(t.amount)) * Decimal(str(t.rate))) for t in today_transactions)
     try:
-        total_earned = Decimal(total_earned).quantize(Decimal('0.01'))
+        today_earned = today_earned.quantize(Decimal('0.01'))
     except Exception:
-        total_earned = Decimal(str(total_earned)).quantize(Decimal('0.01'))
+        today_earned = Decimal(today_earned)
+    today_accounts_count = len(set(t.account_id for t in today_transactions))
+    today_sales_count = today_transactions.count()
 
-    total_approved_withdrawals = approved_withdrawals.count()
-
-    # --- Все заявки на вывод для списка ---
-    sold = WithdrawalRequest.objects.filter(user=user).order_by('-created_at')
+    # Получаем последние продажи для вкладки "Продано"
+    sales = SaleTransaction.objects.filter(account__user=user).order_by('-created_at')
+    sold = WithdrawalRequest.objects.filter(user=request.user).order_by('-created_at')
+    withdraw_errors = None
+    if 'withdraw_errors' in request.session:
+        withdraw_errors = request.session.pop('withdraw_errors')
 
     context = {
         'accounts': accounts,
-        'total_accounts': total_accounts,
         'selected_account': selected_account,
-        'available_dollars': available_dollars,
+        'total_accounts': total_accounts,
+        'total_sold': total_sold,
+        'total_earned': total_earned,
+        'total_sales_count': total_sales_count,
+        'today_sold': today_sold,
+        'today_earned': today_earned,
+        'today_accounts_count': today_accounts_count,
+        'today_sales_count': today_sales_count,
         'roblox_user': roblox_user,
-        'total_sold': total_sold,                         # Робуксы из approved-заявок
-        'total_earned': total_earned,                     # Деньги из approved-заявок
-        'total_sales_count': total_approved_withdrawals,   # Кол-во approved-заявок
-        'sold': sold,                                      # Все заявки для таблицы
-        'withdraw_errors': withdraw_errors,
+        'sales': sales,
+        'available_dollars': available_dollars,
+        'sold': sold,
+        'withdraw_errors': withdraw_errors
     }
 
     return render(request, 'home.html', context)
+
 
 def register(request):
     if request.method == 'POST':
@@ -208,7 +220,7 @@ def register(request):
             # Отправляем email с кодом
             try:
                 send_mail(
-                    'Подтверждение регистрации',
+                    'Код подтверждения',
                     f'Ваш код подтверждения: {confirmation_code}',
                     'guardmaximus4@gmail.com',
                     [email],
@@ -216,7 +228,9 @@ def register(request):
                 )
                 return redirect('core:confirm_code')
             except Exception as exc:
-                print(f"Ошибка отправки email: {exc}")
+                logger.error("Ошибка отправки письма при регистрации: %s", exc, exc_info=True)
+                # Можно показать пользователю понятную ошибку или продолжить, например:
+                messages.error(request, "Не удалось отправить подтверждение по почте. Проверьте настройки почты.")
                 return render(request, 'register.html', {'form': form})
         else:
             return render(request, 'register.html', {'form': form})
@@ -553,12 +567,9 @@ def wallet_withdraw(request):
             return redirect_with_errors(request, errors)
     return redirect('core:home')
 
-
 def redirect_with_errors(request, errors):
     request.session['withdraw_errors'] = errors
     return redirect('core:home')
-
-
 def resend_confirmation_code(request):
     if request.method == 'POST':
         registration_data = request.session.get('registration_data')
@@ -578,7 +589,7 @@ def resend_confirmation_code(request):
 @login_required
 def cancel_sale(request, sale_id):
     try:
-        sale = WithdrawalRequest.objects.get(id=sale_id, account__user=request.user)
+        sale = SaleTransaction.objects.get(id=sale_id, account__user=request.user)
         if sale.status == 'pending':
             sale.status = 'rejected'
             sale.save()
